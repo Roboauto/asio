@@ -43,8 +43,10 @@ void null_event::do_wait()
   std::this_thread::sleep_until((std::chrono::steady_clock::time_point::max)());
 #elif defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
   ::Sleep(INFINITE);
-#else
+#elif !defined(ROBO_STM32_LWIP_ASIO)
   ::pause();
+#else
+    throw std::runtime_error("Pause not implemented");
 #endif
 }
 

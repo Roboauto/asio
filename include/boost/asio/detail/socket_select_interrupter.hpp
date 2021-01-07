@@ -21,7 +21,8 @@
 
 #if defined(BOOST_ASIO_WINDOWS) \
   || defined(__CYGWIN__) \
-  || defined(__SYMBIAN32__)
+  || defined(__SYMBIAN32__) \
+  || defined(ROBO_STM32_LWIP_ASIO)
 
 #include <boost/asio/detail/socket_types.hpp>
 

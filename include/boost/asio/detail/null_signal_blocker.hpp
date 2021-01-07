@@ -21,8 +21,8 @@
   || defined(BOOST_ASIO_WINDOWS) \
   || defined(BOOST_ASIO_WINDOWS_RUNTIME) \
   || defined(__CYGWIN__) \
-  || defined(__SYMBIAN32__)
-
+  || defined(__SYMBIAN32__) \
+  || defined(ROBO_STM32_LWIP_ASIO)
 #include <boost/asio/detail/noncopyable.hpp>
 
 #include <boost/asio/detail/push_options.hpp>

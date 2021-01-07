@@ -334,6 +334,7 @@ BOOST_ASIO_DECL int gethostname(char* name,
 
 #if !defined(BOOST_ASIO_WINDOWS_RUNTIME)
 
+#undef getaddrinfo
 BOOST_ASIO_DECL boost::system::error_code getaddrinfo(const char* host,
     const char* service, const addrinfo_type& hints,
     addrinfo_type** result, boost::system::error_code& ec);

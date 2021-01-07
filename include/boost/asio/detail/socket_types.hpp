@@ -56,12 +56,12 @@
 # endif // !defined(BOOST_ASIO_NO_DEFAULT_LINKED_LIBS)
 # include <boost/asio/detail/old_win_sdk_compat.hpp>
 #else
-# include <sys/ioctl.h>
+//# include <sys/ioctl.h>
 # if (defined(__MACH__) && defined(__APPLE__)) \
    || defined(__FreeBSD__) || defined(__NetBSD__) \
    || defined(__OpenBSD__) || defined(__linux__) \
    || defined(__EMSCRIPTEN__)
-#  include <poll.h>
+//#  include <poll.h>
 # elif !defined(__SYMBIAN32__)
 #  include <sys/poll.h>
 # endif
@@ -75,11 +75,11 @@
 #  include <sys/select.h>
 # endif
 # include <sys/socket.h>
-# include <sys/uio.h>
-# include <sys/un.h>
-# include <netinet/in.h>
+// # include <sys/uio.h>
+// # include <sys/un.h>
+// # include <netinet/in.h>
 # if !defined(__SYMBIAN32__)
-#  include <netinet/tcp.h>
+// #  include <netinet/tcp.h>
 # endif
 # include <arpa/inet.h>
 # include <netdb.h>

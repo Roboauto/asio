@@ -17,7 +17,7 @@
 
 #include <boost/asio/detail/config.hpp>
 
-#if !defined(BOOST_ASIO_HAS_THREADS)
+#if !defined(BOOST_ASIO_HAS_THREADS) || defined(ROBO_STM32_LWIP_ASIO)
 
 #include <boost/asio/detail/noncopyable.hpp>
 

@@ -17,7 +17,7 @@
 
 #include <boost/asio/detail/config.hpp>
 
-#if !defined(BOOST_ASIO_HAS_THREADS)
+#if !defined(BOOST_ASIO_HAS_THREADS) || defined(ROBO_STM32_LWIP_ASIO)
 # include <boost/asio/detail/null_tss_ptr.hpp>
 #elif defined(BOOST_ASIO_HAS_THREAD_KEYWORD_EXTENSION)
 # include <boost/asio/detail/keyword_tss_ptr.hpp>
@@ -37,7 +37,7 @@ namespace detail {
 
 template <typename T>
 class tss_ptr
-#if !defined(BOOST_ASIO_HAS_THREADS)
+#if !defined(BOOST_ASIO_HAS_THREADS) || defined(ROBO_STM32_LWIP_ASIO)
   : public null_tss_ptr<T>
 #elif defined(BOOST_ASIO_HAS_THREAD_KEYWORD_EXTENSION)
   : public keyword_tss_ptr<T>
@@ -50,7 +50,7 @@ class tss_ptr
 public:
   void operator=(T* value)
   {
-#if !defined(BOOST_ASIO_HAS_THREADS)
+#if !defined(BOOST_ASIO_HAS_THREADS) || defined(ROBO_STM32_LWIP_ASIO)
     null_tss_ptr<T>::operator=(value);
 #elif defined(BOOST_ASIO_HAS_THREAD_KEYWORD_EXTENSION)
     keyword_tss_ptr<T>::operator=(value);

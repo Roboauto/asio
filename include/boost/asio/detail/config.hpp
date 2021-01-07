@@ -1572,9 +1572,9 @@
 // POSIX threads.
 #if !defined(BOOST_ASIO_HAS_PTHREADS)
 # if defined(BOOST_ASIO_HAS_THREADS)
-#  if defined(BOOST_ASIO_HAS_BOOST_CONFIG) && defined(BOOST_HAS_PTHREADS)
+#  if defined(BOOST_ASIO_HAS_BOOST_CONFIG) && defined(BOOST_HAS_PTHREADS) && !defined(ROBO_STM32_LWIP_ASIO)
 #   define BOOST_ASIO_HAS_PTHREADS 1
-#  elif defined(_POSIX_THREADS) && (_POSIX_THREADS + 0 >= 0)
+#  elif defined(_POSIX_THREADS) && (_POSIX_THREADS + 0 >= 0) && !defined(ROBO_STM32_LWIP_ASIO)
 #   define BOOST_ASIO_HAS_PTHREADS 1
 #  elif defined(__HAIKU__)
 #   define BOOST_ASIO_HAS_PTHREADS 1

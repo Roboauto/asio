@@ -2877,8 +2877,12 @@ inline hostent* gethostbyaddr(const char* addr, int length, int af,
   hostent* retval = 0;
   int error = 0;
   clear_last_error();
+#ifndef ROBO_STM32_LWIP_ASIO
   ::gethostbyaddr_r(addr, length, af, result,
       buffer, buflength, &retval, &error);
+#else
+    throw std::runtime_error("Get host by addr not implemented");
+#endif
   get_last_error(ec, true);
   if (error)
     ec = translate_netdb_error(error);
@@ -2886,6 +2890,7 @@ inline hostent* gethostbyaddr(const char* addr, int length, int af,
 #endif
 }
 
+#undef gethostbyname
 inline hostent* gethostbyname(const char* name, int af, struct hostent* result,
     char* buffer, int buflength, int ai_flags, boost::system::error_code& ec)
 {
@@ -3250,6 +3255,7 @@ inline int gai_serv(addrinfo_type* aihead,
     // Try service name with TCP first, then UDP.
     if (hints->ai_socktype == 0 || hints->ai_socktype == SOCK_STREAM)
     {
+#ifndef ROBO_STM32_LWIP_ASIO
       servent* sptr = getservbyname(serv, "tcp");
       if (sptr != 0)
       {
@@ -3258,9 +3264,13 @@ inline int gai_serv(addrinfo_type* aihead,
           return EAI_MEMORY;
         num_found += rc;
       }
+#else
+        throw std::runtime_error("Get getservbyname not implemented");
+#endif
     }
     if (hints->ai_socktype == 0 || hints->ai_socktype == SOCK_DGRAM)
     {
+#ifndef ROBO_STM32_LWIP_ASIO
       servent* sptr = getservbyname(serv, "udp");
       if (sptr != 0)
       {
@@ -3269,6 +3279,9 @@ inline int gai_serv(addrinfo_type* aihead,
           return EAI_MEMORY;
         num_found += rc;
       }
+#else
+        throw std::runtime_error("Get getservbyname not implemented");
+#endif
     }
   }
 
@@ -3633,7 +3646,8 @@ inline boost::system::error_code getnameinfo_emulation(
       static ::pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
       ::pthread_mutex_lock(&mutex);
 #endif // defined(BOOST_ASIO_HAS_PTHREADS)
-      servent* sptr = ::getservbyport(port, (flags & NI_DGRAM) ? "udp" : 0);
+#ifndef ROBO_STM32_LWIP_ASIO
+        servent* sptr = ::getservbyport(port, (flags & NI_DGRAM) ? "udp" : 0);
       if (sptr && sptr->s_name && sptr->s_name[0] != '\0')
       {
         gai_strcpy(serv, sptr->s_name, servlen);
@@ -3650,6 +3664,10 @@ inline boost::system::error_code getnameinfo_emulation(
         sprintf(serv, "%u", ntohs(port));
 #endif // defined(BOOST_ASIO_HAS_SECURE_RTL)
       }
+#else
+        throw std::runtime_error("Get getservbyport not implemented");
+#endif
+
 #if defined(BOOST_ASIO_HAS_PTHREADS)
       ::pthread_mutex_unlock(&mutex);
 #endif // defined(BOOST_ASIO_HAS_PTHREADS)
