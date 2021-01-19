@@ -606,7 +606,7 @@ bool non_blocking_connect(socket_type s, boost::system::error_code& ec)
 int socketpair(int af, int type, int protocol,
     socket_type sv[2], boost::system::error_code& ec)
 {
-#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) || defined(ROBO_STM32_LWIP_ASIO)
   (void)(af);
   (void)(type);
   (void)(protocol);

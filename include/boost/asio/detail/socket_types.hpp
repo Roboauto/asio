@@ -56,12 +56,16 @@
 # endif // !defined(BOOST_ASIO_NO_DEFAULT_LINKED_LIBS)
 # include <boost/asio/detail/old_win_sdk_compat.hpp>
 #else
-//# include <sys/ioctl.h>
+#if !defined(ROBO_STM32_LWIP_ASIO) // Ugly
+# include <sys/ioctl.h>
+#endif
 # if (defined(__MACH__) && defined(__APPLE__)) \
    || defined(__FreeBSD__) || defined(__NetBSD__) \
    || defined(__OpenBSD__) || defined(__linux__) \
-   || defined(__EMSCRIPTEN__)
-//#  include <poll.h>
+   || defined(__EMSCRIPTEN__) || defined(ROBO_STM32_LWIP_ASIO)
+#if !defined(ROBO_STM32_LWIP_ASIO) // Ugly
+#  include <poll.h>
+#endif
 # elif !defined(__SYMBIAN32__)
 #  include <sys/poll.h>
 # endif
@@ -313,7 +317,9 @@ typedef in6_addr in6_addr_type;
 typedef ipv6_mreq in6_mreq_type;
 typedef sockaddr_in6 sockaddr_in6_type;
 typedef sockaddr_storage sockaddr_storage_type;
+#ifndef ROBO_STM32_LWIP_ASIO
 typedef sockaddr_un sockaddr_un_type;
+#endif
 typedef addrinfo addrinfo_type;
 typedef ::linger linger_type;
 typedef int ioctl_arg_type;
