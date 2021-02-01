@@ -2987,11 +2987,13 @@ inline int gai_nsearch(const char* host,
         search[search_count].family = BOOST_ASIO_OS_DEF(AF_INET);
         ++search_count;
         break;
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
       case BOOST_ASIO_OS_DEF(AF_INET6):
         search[search_count].host = "0::0";
         search[search_count].family = BOOST_ASIO_OS_DEF(AF_INET6);
         ++search_count;
         break;
+#endif
       case BOOST_ASIO_OS_DEF(AF_UNSPEC):
         search[search_count].host = "0::0";
         search[search_count].family = BOOST_ASIO_OS_DEF(AF_INET6);
@@ -3014,11 +3016,13 @@ inline int gai_nsearch(const char* host,
         search[search_count].family = BOOST_ASIO_OS_DEF(AF_INET);
         ++search_count;
         break;
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
       case BOOST_ASIO_OS_DEF(AF_INET6):
         search[search_count].host = "localhost";
         search[search_count].family = BOOST_ASIO_OS_DEF(AF_INET6);
         ++search_count;
         break;
+#endif
       case BOOST_ASIO_OS_DEF(AF_UNSPEC):
         search[search_count].host = "localhost";
         search[search_count].family = BOOST_ASIO_OS_DEF(AF_INET6);
@@ -3042,11 +3046,13 @@ inline int gai_nsearch(const char* host,
       search[search_count].family = BOOST_ASIO_OS_DEF(AF_INET);
       ++search_count;
       break;
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
     case BOOST_ASIO_OS_DEF(AF_INET6):
       search[search_count].host = host;
       search[search_count].family = BOOST_ASIO_OS_DEF(AF_INET6);
       ++search_count;
       break;
+#endif
     case BOOST_ASIO_OS_DEF(AF_UNSPEC):
       search[search_count].host = host;
       search[search_count].family = BOOST_ASIO_OS_DEF(AF_INET6);
@@ -3124,6 +3130,7 @@ inline int gai_aistruct(addrinfo_type*** next, const addrinfo_type* hints,
       ai->ai_addrlen = sizeof(sockaddr_in4_type);
       break;
     }
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
   case BOOST_ASIO_OS_DEF(AF_INET6):
     {
       sockaddr_in6_type* sin6ptr = gai_alloc<sockaddr_in6_type>();
@@ -3135,6 +3142,7 @@ inline int gai_aistruct(addrinfo_type*** next, const addrinfo_type* hints,
       ai->ai_addrlen = sizeof(sockaddr_in6_type);
       break;
     }
+#endif
   default:
     break;
   }
@@ -3199,6 +3207,7 @@ inline int gai_port(addrinfo_type* aihead, int port, int socktype)
         ++num_found;
         break;
       }
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
     case BOOST_ASIO_OS_DEF(AF_INET6):
       {
         sockaddr_in6_type* sin6ptr =
@@ -3207,6 +3216,7 @@ inline int gai_port(addrinfo_type* aihead, int port, int socktype)
         ++num_found;
         break;
       }
+#endif
     default:
       break;
     }
@@ -3319,7 +3329,9 @@ inline int gai_echeck(const char* host, const char* service,
   case BOOST_ASIO_OS_DEF(AF_UNSPEC):
     break;
   case BOOST_ASIO_OS_DEF(AF_INET):
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
   case BOOST_ASIO_OS_DEF(AF_INET6):
+#endif
     if (service != 0 && service[0] != '\0')
       if (socktype != 0 && socktype != SOCK_STREAM && socktype != SOCK_DGRAM)
         return EAI_SOCKTYPE;
@@ -3567,6 +3579,7 @@ inline boost::system::error_code getnameinfo_emulation(
     addr_len = sizeof(in4_addr_type);
     port = reinterpret_cast<const sockaddr_in4_type*>(sa)->sin_port;
     break;
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
   case BOOST_ASIO_OS_DEF(AF_INET6):
     if (salen != sizeof(sockaddr_in6_type))
     {
@@ -3577,6 +3590,7 @@ inline boost::system::error_code getnameinfo_emulation(
     addr_len = sizeof(in6_addr_type);
     port = reinterpret_cast<const sockaddr_in6_type*>(sa)->sin6_port;
     break;
+#endif
   default:
     return ec = boost::asio::error::address_family_not_supported;
   }

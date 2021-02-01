@@ -310,12 +310,16 @@ struct in4_mreq_type
   struct in_addr imr_interface;
 };
 # else
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IGMP)
 typedef ip_mreq in4_mreq_type;
+#endif
 # endif
 typedef sockaddr_in sockaddr_in4_type;
 typedef in6_addr in6_addr_type;
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
 typedef ipv6_mreq in6_mreq_type;
 typedef sockaddr_in6 sockaddr_in6_type;
+#endif
 typedef sockaddr_storage sockaddr_storage_type;
 #ifndef ROBO_STM32_LWIP_ASIO
 typedef sockaddr_un sockaddr_un_type;

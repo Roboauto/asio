@@ -72,10 +72,14 @@ public:
   // Get the underlying size of the endpoint in the native type.
   std::size_t size() const BOOST_ASIO_NOEXCEPT
   {
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
     if (is_v4())
       return sizeof(boost::asio::detail::sockaddr_in4_type);
     else
       return sizeof(boost::asio::detail::sockaddr_in6_type);
+#else
+      return sizeof(boost::asio::detail::sockaddr_in4_type);
+#endif
   }
 
   // Set the underlying size of the endpoint in the native type.
@@ -125,7 +129,9 @@ private:
   {
     boost::asio::detail::socket_addr_type base;
     boost::asio::detail::sockaddr_in4_type v4;
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
     boost::asio::detail::sockaddr_in6_type v6;
+#endif
   } data_;
 };
 

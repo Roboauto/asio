@@ -43,6 +43,7 @@ endpoint::endpoint() BOOST_ASIO_NOEXCEPT
 endpoint::endpoint(int family, unsigned short port_num) BOOST_ASIO_NOEXCEPT
   : data_()
 {
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
   using namespace std; // For memcpy.
   if (family == BOOST_ASIO_OS_DEF(AF_INET))
   {
@@ -67,12 +68,19 @@ endpoint::endpoint(int family, unsigned short port_num) BOOST_ASIO_NOEXCEPT
     data_.v6.sin6_addr.s6_addr[14] = 0; data_.v6.sin6_addr.s6_addr[15] = 0;
     data_.v6.sin6_scope_id = 0;
   }
+#else
+    data_.v4.sin_family = BOOST_ASIO_OS_DEF(AF_INET);
+    data_.v4.sin_port =
+        boost::asio::detail::socket_ops::host_to_network_short(port_num);
+    data_.v4.sin_addr.s_addr = BOOST_ASIO_OS_DEF(INADDR_ANY);
+#endif
 }
 
 endpoint::endpoint(const boost::asio::ip::address& addr,
     unsigned short port_num) BOOST_ASIO_NOEXCEPT
   : data_()
 {
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
   using namespace std; // For memcpy.
   if (addr.is_v4())
   {
@@ -96,6 +104,14 @@ endpoint::endpoint(const boost::asio::ip::address& addr,
       static_cast<boost::asio::detail::u_long_type>(
         v6_addr.scope_id());
   }
+#else
+    data_.v4.sin_family = BOOST_ASIO_OS_DEF(AF_INET);
+    data_.v4.sin_port =
+        boost::asio::detail::socket_ops::host_to_network_short(port_num);
+    data_.v4.sin_addr.s_addr =
+        boost::asio::detail::socket_ops::host_to_network_long(
+            addr.to_v4().to_uint());
+#endif
 }
 
 void endpoint::resize(std::size_t new_size)
@@ -109,6 +125,7 @@ void endpoint::resize(std::size_t new_size)
 
 unsigned short endpoint::port() const BOOST_ASIO_NOEXCEPT
 {
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
   if (is_v4())
   {
     return boost::asio::detail::socket_ops::network_to_host_short(
@@ -119,10 +136,15 @@ unsigned short endpoint::port() const BOOST_ASIO_NOEXCEPT
     return boost::asio::detail::socket_ops::network_to_host_short(
         data_.v6.sin6_port);
   }
+#else
+    return boost::asio::detail::socket_ops::network_to_host_short(
+        data_.v4.sin_port);
+#endif
 }
 
 void endpoint::port(unsigned short port_num) BOOST_ASIO_NOEXCEPT
 {
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
   if (is_v4())
   {
     data_.v4.sin_port
@@ -133,10 +155,15 @@ void endpoint::port(unsigned short port_num) BOOST_ASIO_NOEXCEPT
     data_.v6.sin6_port
       = boost::asio::detail::socket_ops::host_to_network_short(port_num);
   }
+#else
+    data_.v4.sin_port
+        = boost::asio::detail::socket_ops::host_to_network_short(port_num);
+#endif
 }
 
 boost::asio::ip::address endpoint::address() const BOOST_ASIO_NOEXCEPT
 {
+#if !defined(ROBO_STM32_LWIP_ASIO_NO_IPV6)
   using namespace std; // For memcpy.
   if (is_v4())
   {
@@ -154,6 +181,11 @@ boost::asio::ip::address endpoint::address() const BOOST_ASIO_NOEXCEPT
 #endif // defined(BOOST_ASIO_HAS_STD_ARRAY)
     return boost::asio::ip::address_v6(bytes, data_.v6.sin6_scope_id);
   }
+#else
+    return boost::asio::ip::address_v4(
+        boost::asio::detail::socket_ops::network_to_host_long(
+            data_.v4.sin_addr.s_addr));
+#endif
 }
 
 void endpoint::address(const boost::asio::ip::address& addr) BOOST_ASIO_NOEXCEPT
