@@ -3448,7 +3448,11 @@ inline int getaddrinfo_emulation(const char* host, const char* service,
 
     // Look up hostname.
     hostent hent;
+#if !defined(ROBO_STM32_LWIP_ASIO)
     char hbuf[8192] = "";
+#else
+    char hbuf[256] = "";
+#endif
     hostent* hptr = socket_ops::gethostbyname(sptr->host,
         sptr->family, &hent, hbuf, sizeof(hbuf), hints.ai_flags, ec);
     if (hptr == 0)

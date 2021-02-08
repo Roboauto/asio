@@ -153,7 +153,11 @@ void socket_select_interrupter::interrupt()
 
 bool socket_select_interrupter::reset()
 {
+#if defined(ROBO_STM32_LWIP_ASIO)
+  char data[8];
+#else
   char data[1024];
+#endif
   socket_ops::buf b;
   socket_ops::init_buf(b, data, sizeof(data));
   boost::system::error_code ec;
